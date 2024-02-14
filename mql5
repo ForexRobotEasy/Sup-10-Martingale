@@ -1,0 +1,103 @@
+mql5
+//+------------------------------------------------------------------+
+//|                                               Sup 10 Martingale  |
+//|                                            forexroboteasy.com    |
+//|                                            Forex Robot Easy Team |
+//+------------------------------------------------------------------+
+
+// Include necessary libraries
+#include <InrexEA\InrexEA.mqh>
+
+// Define constants
+#define SYMBOL 'XAUUSD'
+#define LOT_SIZE 0.01
+#define MAX_ORDERS 10
+#define MARTINGALE_FACTOR 2
+
+// Initialize InrexEA DB system
+InrexEA DB;
+
+//+------------------------------------------------------------------+
+//| Expert initialization function                                   |
+//+------------------------------------------------------------------+
+int OnInit()
+{
+    // Initialize InrexEA DB
+    DB.Init(Symbol(), Timeframe());
+    
+    return(INIT_SUCCEEDED);
+}
+
+//+------------------------------------------------------------------+
+//| Expert deinitialization function                                 |
+//+------------------------------------------------------------------+
+void OnDeinit(const int reason)
+{
+    // Deinitialize InrexEA DB
+    DB.Deinit();
+}
+
+//+------------------------------------------------------------------+
+//| Expert tick function                                             |
+//+------------------------------------------------------------------+
+void OnTick()
+{
+    // Calculate lot size based on martingale factor
+    double lotSize = LOT_SIZE * MathPow(MARTINGALE_FACTOR, DB.TotalOrders());
+    
+    // Check if maximum number of orders has been reached
+    if (DB.TotalOrders() < MAX_ORDERS)
+    {
+        // Check if market trend is in favor
+        if (IsTrendUp(XAUUSD))
+        {
+            // Open a buy order
+            DB.OpenOrder(OrderType(), SYMBOL, lotSize, Ask, StopLoss, TakeProfit);
+        }
+        else if (IsTrendDown(XAUUSD))
+        {
+            // Open a sell order
+            DB.OpenOrder(OrderType(), SYMBOL, lotSize, Bid, StopLoss, TakeProfit);
+        }
+    }
+    
+    // Close losing orders based on martingale factor
+    DB.CloseLosingOrders();
+}
+
+//+------------------------------------------------------------------+
+//| Check if market trend is up                                      |
+//+------------------------------------------------------------------+
+bool IsTrendUp(const string symbol)
+{
+    // Implement mechanism to check market trend for symbol XAUUSD
+    // Return true if trend is up, false otherwise
+}
+
+//+------------------------------------------------------------------+
+//| Check if market trend is down                                    |
+//+------------------------------------------------------------------+
+bool IsTrendDown(const string symbol)
+{
+    // Implement mechanism to check market trend for symbol XAUUSD
+    // Return true if trend is down, false otherwise
+}
+
+//+------------------------------------------------------------------+
+//| Open a new order                                                  |
+//+------------------------------------------------------------------+
+void OpenOrder(const ENUM_ORDER_TYPE orderType, const string symbol, const double volume,
+               const double price, const double stopLoss, const double takeProfit)
+{
+    // Implement mechanism to open a new order with specified parameters
+}
+
+//+------------------------------------------------------------------+
+//| Close losing orders                                               |
+//+------------------------------------------------------------------+
+void CloseLosingOrders()
+{
+    // Implement mechanism to close losing orders based on martingale factor
+}
+
+//+------------------------------------------------------------------+
